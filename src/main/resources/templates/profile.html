@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>GamerSpawn - Mi perfil</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <p class="eyebrow">Página privada</p>
+            <h1>Mi perfil</h1>
+            <p class="lead">Sesión iniciada como <strong sec:authentication="name">usuario</strong>.</p>
+            <p class="lead">Aquí podrás configurar tus juegos de interés, avatar, nombre de usuario y notificaciones. Se implementará más adelante.</p>
+            <p><a class="btn" th:href="@{/}">Volver al inicio</a></p>
+        </div>
+    </section>
+</body>
+</html>

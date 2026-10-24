@@ -1,18 +1,326 @@
+:root {
+    --black: #000;
+    --surface: #111;
+    --blue: #3264f5;
+    --cyan: #8df2f3;
+    --text: #fff;
+    --muted: #969696;
+}
+
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #1e1e2f;
-    color: #f0f0f0;
-    max-width: 800px;
-    margin: 40px auto;
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    background-color: var(--black);
+    color: var(--text);
+    margin: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+h1, h2, h3, .logo {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
     padding: 0 16px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid var(--cyan);
+    background-color: transparent;
+    color: var(--cyan);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: var(--cyan);
+    color: var(--black);
+}
+
+/* Navbar */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-bottom: 1px solid #222;
+}
+
+.navbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.logo {
+    font-size: 32px;
+}
+
+.logo span {
+    color: var(--cyan);
+}
+
+.navbar nav {
+    margin-left: auto;
+}
+
+.navbar nav div {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.navbar nav a:not(.btn):hover {
+    color: var(--cyan);
+}
+
+.navbar form {
+    margin: 0;
+}
+
+/* Hero */
+.hero {
+    background: linear-gradient(to bottom, var(--blue), rgba(50, 100, 245, 0));
+    padding: 80px 0 64px;
     text-align: center;
 }
 
-h1 {
-    color: #7c5cff;
+.eyebrow {
+    color: var(--cyan);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 0;
 }
 
-h2 {
-    color: #b0b0c8;
-    font-weight: normal;
+.hero h1 {
+    font-size: 64px;
+    line-height: 1;
+    margin: 12px 0;
+}
+
+.lead {
+    font-size: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.greeting {
+    margin-top: 32px;
+}
+
+.greeting h1 {
+    font-size: 40px;
+    color: var(--cyan);
+}
+
+.greeting h2 {
+    color: var(--muted);
+    font-size: 22px;
+}
+
+/* Sections */
+section {
+    padding: 48px 0;
+}
+
+.section-title {
+    font-size: 48px;
+    margin: 0 0 24px;
+}
+
+
+.event-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Dark overlay so text stays readable over any gradient or image */
+.event-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0) 60%);
+}
+
+.event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 20px rgba(141, 242, 243, 0.6);
+}
+
+.event-card-body {
+    position: relative;
+    z-index: 1;
+    padding: 16px;
+}
+
+.event-card-body h3 {
+    font-size: 24px;
+    line-height: 1;
+    margin: 0;
+}
+
+.event-card-body p {
+    margin: 4px 0 0;
+    font-size: 14px;
+}
+
+/* Neon gradients, replaced by an image when background-image is set inline */
+.neon-1 {
+    background-image: linear-gradient(135deg, #ff00e5, #3264f5);
+}
+
+.neon-2 {
+    background-image: linear-gradient(135deg, #00f0ff, #7a00ff);
+}
+
+.neon-3 {
+    background-image: linear-gradient(135deg, #39ff14, #00b3ff);
+}
+
+.neon-4 {
+    background-image: linear-gradient(135deg, #ff6b00, #ff00a8);
+}
+
+/* Upcoming events: small 16:9 cards */
+.upcoming {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.upcoming .event-card {
+    aspect-ratio: 16 / 9;
+}
+
+.event-date {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.7);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    line-height: 1;
+}
+
+.event-date span {
+    display: block;
+    font-size: 26px;
+    color: var(--cyan);
+}
+
+.event-type {
+    color: var(--cyan);
+}
+
+.event-place {
+    color: #ddd;
+}
+
+/* Ribbon divider */
+.ribbon {
+    height: 24px;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--cyan) 0 16px,
+        var(--black) 16px 32px
+    );
+}
+
+
+.featured {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(max(200px, calc((100% - 48px) / 4)), 1fr));
+    gap: 16px;
+}
+
+.featured-card {
+    aspect-ratio: 3 / 4;
+}
+
+.featured-card .event-card-body {
+    padding: 20px;
+}
+
+.featured-card h3 {
+    font-size: 32px;
+}
+
+.featured-card p {
+    font-weight: bold;
+}
+
+/* Sponsors */
+.sponsors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.sponsor {
+    padding: 32px 16px;
+    border: 1px solid #333;
+    text-align: center;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 28px;
+    color: var(--muted);
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.sponsor:hover {
+    color: var(--cyan);
+    border-color: var(--cyan);
+}
+
+/* Footer */
+footer {
+    padding: 40px 0;
+    text-align: center;
+    color: var(--muted);
+}
+
+footer p {
+    margin: 8px 0 0;
+}
+
+@media (max-width: 600px) {
+    .hero h1 {
+        font-size: 44px;
+    }
+
+    .section-title {
+        font-size: 36px;
+    }
 }

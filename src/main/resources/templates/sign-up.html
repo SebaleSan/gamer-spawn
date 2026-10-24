@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>GamerSpawn Registro</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+    </head>
+    <body>
+        <div th:if="${param.error}">
+            No se pudo completar el registro.
+        </div>
+        <form th:action="@{/sign-up}" method="post">
+            <div><label> Nombre : <input type="text" name="name" required/> </label></div>
+            <div><label> Correo : <input type="email" name="email" required/> </label></div>
+            <div><label> Password: <input type="password" name="password" required/> </label></div>
+            <div><input type="submit" value="Registrarse"/></div>
+        </form>
+    </body>
+</html>

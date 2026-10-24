@@ -17,7 +17,7 @@ public class HomeController {
 
 
     @GetMapping("/")
-    public String root(@RequestParam (name = "name", required = false, defaultValue = "Root") String name, Model model) {
+    public String root(@RequestParam (name = "name", required = false, defaultValue = "GamerSpawn") String name, Model model) {
         model.addAttribute("name", name);
         return "home";
     }
