@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>GamerSpawn</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+    <h1 th:text="'Bienvenido a ' + (${name} ?: 'GamerSpawn') + '!'"></h1>
+
+    <div sec:authorize="isAuthenticated()">
+        <h1 th:inline="text">Hola <span th:remove="tag" sec:authentication="name"></span>!</h1>
+        <h2>Seguridad implementada con Spring Security</h2>
+    </div>
+</body>
+</html>
