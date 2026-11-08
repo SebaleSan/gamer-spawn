@@ -5,9 +5,8 @@
     <title>GamerSpawn</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/fonts.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -15,6 +14,7 @@
         <div class="container navbar-inner">
             <a class="logo" th:href="@{/}">Gamer<span>Spawn</span></a>
             <nav>
+                <a th:href="@{/events}">Buscar eventos</a>
                 <div sec:authorize="isAnonymous()">
                     <a th:href="@{/login}">Iniciar sesión</a>
                     <a class="btn" th:href="@{/sign-up}">Registrarse</a>
@@ -36,41 +36,21 @@
             <h1 th:text="'Bienvenido a ' + (${name} ?: 'GamerSpawn') + '!'"></h1>
             <p class="lead">Encuentra, comparte y participa en los mejores eventos gamer cerca de ti.</p>
 
-            <div sec:authorize="isAuthenticated()" class="greeting">
-                <h1 th:inline="text">Hola <span th:remove="tag" sec:authentication="name"></span>!</h1>
-                <h2>Seguridad implementada con Spring Security</h2>
-            </div>
         </div>
     </section>
 
     <main class="container">
         <section>
             <h2 class="section-title">Eventos destacados</h2>
-            <!-- Para reemplazar el gradiente actual por una imagen de findo:
-                 th:style="|background-image: url('@{/img/your-image.jpg}')|" -->
             <div class="featured">
-                <a class="event-card featured-card neon-2" th:href="@{/event-info}">
+                <a class="event-card featured-card neon-2"
+                   th:each="event, eventStat : ${events}"
+                   th:if="${eventStat.index < 4}"
+                   th:style="${event.imageUrl != null ? 'background-image: url(' + event.imageUrl + ')' : ''}"
+                   th:href="@{/event-info/{id}(id=${event.id})}">
                     <div class="event-card-body">
-                        <h3>Copa Nacional de eSports</h3>
-                        <p>29 NOV · Movistar Arena</p>
-                    </div>
-                </a>
-                <a class="event-card featured-card neon-1" th:href="@{/event-info}">
-                    <div class="event-card-body">
-                        <h3>Santiago Gaming Fest</h3>
-                        <p>15 NOV · Espacio Riesco</p>
-                    </div>
-                </a>
-                <a class="event-card featured-card neon-3" th:href="@{/event-info}">
-                    <div class="event-card-body">
-                        <h3>Game Jam Chile</h3>
-                        <p>13 DIC · Online</p>
-                    </div>
-                </a>
-                <a class="event-card featured-card neon-4" th:href="@{/event-info}">
-                    <div class="event-card-body">
-                        <h3>Cosplay Fest Chile</h3>
-                        <p>20 DIC · Estación Mapocho</p>
+                        <h3 th:text="${event.title}">Evento</h3>
+                        <p th:text="${event.eventDate + ' · ' + event.location}">Fecha · Ubicación</p>
                     </div>
                 </a>
             </div>
@@ -83,39 +63,16 @@
     <div class="container">
         <section>
             <h2 class="section-title">Próximos eventos</h2>
-            <!-- Este espacio se deja para que agregar imagenes mas adelante a las tarjetas:
-                 th:style="|background-image: url('@{/img/your-image.jpg}')|" -->
             <div class="upcoming">
-                <a class="event-card neon-1" th:href="@{/event-info}">
-                    <div class="event-date"><span>08</span>NOV</div>
+                <a class="event-card neon-1"
+                   th:each="event, eventStat : ${events}"
+                   th:if="${eventStat.index >= 4}"
+                   th:style="${event.imageUrl != null ? 'background-image: url(' + event.imageUrl + ')' : ''}"
+                   th:href="@{/event-info/{id}(id=${event.id})}">
                     <div class="event-card-body">
-                        <h3>LAN Party Valparaíso</h3>
-                        <p class="event-type">LAN Party · 24 horas</p>
-                        <p class="event-place">Valparaíso</p>
-                    </div>
-                </a>
-                <a class="event-card neon-2" th:href="@{/event-info}">
-                    <div class="event-date"><span>15</span>NOV</div>
-                    <div class="event-card-body">
-                        <h3>Santiago Gaming Fest 2026</h3>
-                        <p class="event-type">Festival · Torneos + Cosplay</p>
-                        <p class="event-place">Espacio Riesco, Santiago</p>
-                    </div>
-                </a>
-                <a class="event-card neon-3" th:href="@{/event-info}">
-                    <div class="event-date"><span>22</span>NOV</div>
-                    <div class="event-card-body">
-                        <h3>Torneo Indie Games</h3>
-                        <p class="event-type">Torneo + Demos</p>
-                        <p class="event-place">Concepción</p>
-                    </div>
-                </a>
-                <a class="event-card neon-4" th:href="@{/event-info}">
-                    <div class="event-date"><span>06</span>DIC</div>
-                    <div class="event-card-body">
-                        <h3>Retro Arcade Night</h3>
-                        <p class="event-type">Noche temática · Clásicos 80s y 90s</p>
-                        <p class="event-place">La Serena</p>
+                        <h3 th:text="${event.title}">Evento</h3>
+                        <p class="event-type" th:text="${event.eventType}">Tipo de evento</p>
+                        <p class="event-place" th:text="${event.location}">Ubicación</p>
                     </div>
                 </a>
             </div>
