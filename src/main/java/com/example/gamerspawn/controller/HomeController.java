@@ -5,21 +5,33 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.gamerspawn.client.BackendApiClient;
+import com.example.gamerspawn.model.EventView;
 
-@Controller 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import java.util.List;
+
+@Controller
 public class HomeController {
-    
-    @GetMapping("/home")
-    public String home(@RequestParam(name = "name", required = false, defaultValue = "Primera implemetancion de seguridad y calidad en el desarrollo de software") String name, Model model) {
-        model.addAttribute("name", name);
+
+    private final BackendApiClient backendApiClient;
+
+    public HomeController(BackendApiClient backendApiClient) {
+        this.backendApiClient = backendApiClient;
+    }
+
+    @GetMapping({"/", "/home"})
+    public String home(Authentication authentication, Model model) {
+        List<EventView> events = backendApiClient.getEvents();
+        model.addAttribute("events", events);
+        if (authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken)) {
+            model.addAttribute("username", authentication.getName());
+        }
         return "home";
     }
 
-
-    @GetMapping("/")
-    public String root(@RequestParam (name = "name", required = false, defaultValue = "GamerSpawn") String name, Model model) {
-        model.addAttribute("name", name);
-        return "home";
-    }
     
 }
