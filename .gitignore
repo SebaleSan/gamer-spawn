@@ -42,3 +42,7 @@ build/
 
 # Archivos temporales
 *.tmp
+
+# Archivos locales de análisis Sonar
+.sonar/
+.scannerwork/

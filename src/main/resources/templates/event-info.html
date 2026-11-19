@@ -5,16 +5,71 @@
     <title>GamerSpawn - Eventos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/fonts.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a class="logo" th:href="@{/}">Gamer<span>Spawn</span></a>
+            <nav>
+                <a th:href="@{/}">Inicio</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn" type="submit">Cerrar sesión</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
     <section class="hero">
         <div class="container">
             <p class="eyebrow">Página privada</p>
-            <h1>Información de eventos</h1>
-            <p class="lead">Sesión iniciada como <strong sec:authentication="name">usuario</strong>.</p>
-            <p class="lead">Aquí podrás buscar eventos por categoría, fecha y ubicación, y ver sus detalles. Se implementará más adelante.</p>
+            <h1 th:if="${event == null}">Información de eventos</h1>
+            <h1 th:if="${event != null}" th:text="${event.title}">Evento</h1>
+            <p class="lead">Aqui encontraras toda la informacion para este evento,  <strong sec:authentication="name">usuario</strong>.</p>
+            <div class="event-detail" th:if="${event != null}">
+                <div class="event-detail-image"
+                     th:style="${event.imageUrl != null ? 'background-image: url(' + event.imageUrl + ')' : ''}">
+                    <span class="event-badge" th:text="${event.modality}">MODALIDAD</span>
+                </div>
+                <div class="event-detail-content">
+                    <p class="event-detail-description" th:text="${event.description}">Descripción del evento</p>
+                    <div class="event-meta">
+                        <div><span>Fecha</span><strong th:text="${event.eventDate}">Fecha</strong></div>
+                        <div><span>Hora</span><strong th:text="${event.eventTime}">Hora</strong></div>
+                        <div><span>Videojuego</span><strong th:text="${event.videoGame}">Videojuego</strong></div>
+                        <div><span>Categoría</span><strong th:text="${event.category}">Categoría</strong></div>
+                        <div><span>Ubicación</span><strong th:text="${event.location}">Ubicación</strong></div>
+                        <div><span>Ciudad / país</span><strong th:text="${event.city + ' / ' + event.country}">Ciudad / país</strong></div>
+                        <div><span>Organizador</span><strong th:text="${event.organizer}">Organizador</strong></div>
+                    </div>
+                    <div class="event-info-block">
+                        <h2>Participación</h2>
+                        <p th:text="${event.participationRequirements}">Requisitos de participación</p>
+                        <p th:text="${event.registrationInformation}">Información de inscripción</p>
+                    </div>
+                    <a class="btn event-access-link"
+                       th:if="${event.accessLink != null}"
+                       th:href="${event.accessLink}"
+                       target="_blank"
+                       rel="noopener">Acceder al evento</a>
+                    <div class="event-gallery" th:if="${event.photoUrls != null}">
+                        <img th:each="photoUrl : ${event.photoUrls}"
+                             th:src="${photoUrl}"
+                             th:alt="${event.title}">
+                    </div>
+                </div>
+            </div>
+            <div th:if="${event == null}">
+                <p class="lead">Selecciona un evento para ver sus detalles.</p>
+                <ul>
+                    <li th:each="availableEvent : ${events}">
+                        <a th:href="@{/event-info/{id}(id=${availableEvent.id})}"
+                           th:text="${availableEvent.title}">Evento</a>
+                    </li>
+                </ul>
+            </div>
             <p><a class="btn" th:href="@{/}">Volver al inicio</a></p>
         </div>
     </section>

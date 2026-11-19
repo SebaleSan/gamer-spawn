@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>GamerSpawn - Buscar eventos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a class="logo" th:href="@{/}">Gamer<span>Spawn</span></a>
+            <nav>
+                <a th:href="@{/}">Inicio</a>
+                <a sec:authorize="isAnonymous()" th:href="@{/login}">Iniciar sesión</a>
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                    <button class="btn" type="submit">Cerrar sesión</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <section class="search-hero">
+        <div class="container">
+            <p class="eyebrow">Game Zone</p>
+            <h1>Buscar eventos</h1>
+            <p class="lead">Encuentra tu próximo evento gamer por fecha, lugar, juego o modalidad.</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <form class="event-search-form" th:action="@{/events}" method="get">
+            <input name="title" placeholder="Nombre del evento" th:value="${filters.title}">
+            <input name="videoGame" placeholder="Videojuego" th:value="${filters.videoGame}">
+            <input name="eventType" placeholder="Tipo" th:value="${filters.eventType}">
+            <input name="category" placeholder="Categoría" th:value="${filters.category}">
+            <input name="country" placeholder="País" th:value="${filters.country}">
+            <input name="city" placeholder="Ciudad" th:value="${filters.city}">
+            <select name="modality">
+                <option value="">Todas las modalidades</option>
+                <option value="PRESENCIAL" th:selected="${filters.modality == 'PRESENCIAL'}">Presencial</option>
+                <option value="ONLINE" th:selected="${filters.modality == 'ONLINE'}">Online</option>
+            </select>
+            <input type="date" name="eventDate" th:value="${filters.eventDate}">
+            <button class="btn" type="submit">Buscar</button>
+        </form>
+        <p class="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}"></p>
+
+        <section>
+            <h2 class="section-title">Resultados</h2>
+            <div class="search-results">
+                <a class="event-card search-card"
+                   th:each="event : ${events}"
+                   th:href="@{/event-info/{id}(id=${event.id})}"
+                   th:style="${event.imageUrl != null ? 'background-image: url(' + event.imageUrl + ')' : ''}">
+                    <div class="event-card-body">
+                        <h3 th:text="${event.title}">Evento</h3>
+                        <p th:text="${event.eventDate + ' · ' + event.city}">Fecha · Ciudad</p>
+                        <p class="event-type" th:text="${event.modality + ' · ' + event.eventType}">Modalidad · Tipo</p>
+                    </div>
+                </a>
+            </div>
+            <p th:if="${#lists.isEmpty(events)}" class="empty-state">No encontramos eventos con esos filtros.</p>
+        </section>
+    </main>
+</body>
+</html>
