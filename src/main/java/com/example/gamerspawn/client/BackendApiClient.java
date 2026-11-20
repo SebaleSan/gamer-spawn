@@ -89,6 +89,25 @@ public class BackendApiClient {
                 });
     }
 
+    public List<EventView> getMyEvents(String token) {
+        return restClient.get()
+                .uri("/api/private/events/mine")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+    }
+
+    public EventView createEvent(Map<String, Object> event, String token) {
+        return restClient.post()
+                .uri("/api/private/events")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(event)
+                .retrieve()
+                .body(EventView.class);
+    }
+
     public EventView getEventById(Long id, String token) {
         return restClient.get()
                 .uri("/api/private/events/{id}", id)
