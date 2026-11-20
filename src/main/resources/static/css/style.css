@@ -273,6 +273,203 @@ h1, h2, h3, .logo {
     object-fit: cover;
 }
 
+.event-feedback-tabs {
+    border-top: 1px solid #333;
+    background: #111;
+    text-align: left;
+    max-width: 980px;
+    margin: 24px auto 0;
+    border: 1px solid #2d3f72;
+    border-radius: 12px;
+    overflow: visible;
+    box-shadow: 0 0 32px rgba(50, 100, 245, 0.18);
+}
+
+.event-feedback-tab-buttons {
+    display: flex;
+    border-bottom: 1px solid #333;
+}
+
+.event-feedback-tab {
+    flex: 1;
+    padding: 14px 18px;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.event-feedback-tab.active {
+    border-bottom-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.event-feedback-panel {
+    display: none;
+    padding: 28px;
+}
+
+.event-feedback-panel.active {
+    display: block;
+}
+
+.event-feedback-panel h2 {
+    color: var(--cyan);
+}
+
+.event-feedback-panel textarea,
+.event-feedback-panel input[type="text"] {
+    width: 100%;
+    min-height: 110px;
+    box-sizing: border-box;
+    margin: 8px 0 12px;
+    padding: 12px;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background: #080808;
+    color: var(--text);
+    resize: vertical;
+}
+
+.event-feedback-panel label {
+    display: block;
+    font-weight: bold;
+}
+
+.event-feedback-panel article {
+    position: relative;
+    margin-top: 14px;
+    padding: 16px 56px 16px 16px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: #191919;
+}
+
+.event-feedback-panel article p {
+    color: #ddd;
+}
+
+.event-feedback-panel details {
+    margin: 10px 0;
+}
+
+.comment-menu {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
+.comment-menu details {
+    margin: 0;
+}
+
+.comment-menu summary {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--text);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    list-style: none;
+}
+
+.comment-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.comment-menu summary:hover {
+    background: #292929;
+}
+
+.comment-menu-options {
+    position: absolute;
+    top: 42px;
+    right: 0;
+    z-index: 20;
+    width: 280px;
+    padding: 12px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #080808;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+}
+
+.comment-menu-options form {
+    margin: 0;
+}
+
+.comment-menu-options textarea {
+    min-height: 80px;
+}
+
+.comment-delete-button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: #ff7777;
+    text-align: left;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.comment-delete-button:hover {
+    background: rgba(255, 119, 119, 0.1);
+}
+
+.event-feedback-panel fieldset {
+    border: 0;
+    padding: 0;
+}
+
+.event-feedback-panel fieldset label {
+    display: inline-block;
+    margin: 8px 6px 14px 0;
+}
+
+.event-feedback-panel fieldset label span {
+    display: inline-grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: 1px solid #444;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.event-feedback-panel fieldset input {
+    position: absolute;
+    opacity: 0;
+}
+
+.event-feedback-panel fieldset label:has(input:checked) span {
+    border-color: var(--cyan);
+    background: var(--cyan);
+    color: var(--black);
+}
+
+.event-feedback-message {
+    margin: 16px 28px 0;
+    padding: 12px;
+    border: 1px solid #39ff14;
+    border-radius: 6px;
+    background: rgba(57, 255, 20, 0.08);
+}
+
+.event-feedback-message.error {
+    border-color: #ff7777;
+    background: rgba(255, 119, 119, 0.08);
+}
+
 .greeting {
     margin-top: 32px;
 }

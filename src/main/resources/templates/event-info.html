@@ -61,6 +61,124 @@
                     </div>
                 </div>
             </div>
+
+            <div class="event-feedback-tabs" th:if="${event != null}">
+                    <div class="event-feedback-tab-buttons" role="tablist"
+                         aria-label="Comentarios y valoraciones">
+                        <button class="event-feedback-tab active"
+                                type="button"
+                                data-tab="comments"
+                                role="tab">Comentarios</button>
+                        <button class="event-feedback-tab"
+                                type="button"
+                                data-tab="rating"
+                                role="tab">Valoraciones</button>
+                    </div>
+
+                    <div class="event-feedback-message"
+                         th:if="${feedbackMessage}"
+                         th:text="${feedbackMessage}"></div>
+                    <div class="event-feedback-message error"
+                         th:if="${feedbackError}"
+                         th:text="${feedbackError}"></div>
+
+                    <section class="event-feedback-panel active"
+                             id="feedback-comments"
+                             role="tabpanel">
+                        <h2>Comentarios</h2>
+
+                        <form th:action="@{/event-info/{id}/comments(id=${event.id})}"
+                              method="post">
+                            <label for="comment-content">Agregar comentario</label>
+                            <textarea id="comment-content"
+                                      name="content"
+                                      maxlength="1000"
+                                      required
+                                      placeholder="Escribe tu comentario"></textarea>
+                            <button class="btn" type="submit">Publicar</button>
+                        </form>
+
+                        <div th:if="${comments == null or #lists.isEmpty(comments)}">
+                            Aún no hay comentarios para este evento.
+                        </div>
+
+                        <article th:each="comment : ${comments}">
+                            <strong th:text="${comment.username}">Usuario</strong>
+                            <p th:text="${comment.content}">Comentario</p>
+
+                            <div class="comment-menu" th:if="${comment.username == currentUsername}">
+                                <details>
+                                    <summary aria-label="Opciones del comentario">⋮</summary>
+                                    <div class="comment-menu-options">
+                                    <form th:action="@{/event-info/{id}/comments/{commentId}/edit(id=${event.id},commentId=${comment.id})}"
+                                          method="post">
+                                        <label th:for="'edit-comment-' + ${comment.id}">Editar comentario</label>
+                                        <textarea th:id="'edit-comment-' + ${comment.id}"
+                                                  name="content"
+                                                  maxlength="1000"
+                                                  required
+                                                  th:text="${comment.content}"></textarea>
+                                        <button class="btn" type="submit">Guardar</button>
+                                        <button class="comment-cancel-button"
+                                                type="button"
+                                                th:data-comment-menu-id="'edit-comment-' + ${comment.id}">
+                                            Cancelar
+                                        </button>
+                                    </form>
+
+                                    <form th:action="@{/event-info/{id}/comments/{commentId}/delete(id=${event.id},commentId=${comment.id})}"
+                                          method="post"
+                                          data-confirm="¿Eliminar este comentario?">
+                                        <button class="comment-delete-button" type="submit">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                    </div>
+                                </details>
+                            </div>
+                        </article>
+                    </section>
+
+                    <section class="event-feedback-panel"
+                             id="feedback-rating"
+                             role="tabpanel">
+                        <h2>Valoraciones</h2>
+
+                        <p th:if="${rating != null}">
+                            Promedio:
+                            <strong th:text="${rating.averageScore != null ? #numbers.formatDecimal(rating.averageScore, 1, 1) : '0.0'}">0.0</strong>
+                            de 5
+                            ·
+                            <span th:text="${rating.totalRatings}">0</span>
+                            valoraciones
+                        </p>
+
+                        <form th:action="@{/event-info/{id}/rating(id=${event.id})}"
+                              method="post">
+                            <fieldset>
+                                <legend>Tu valoración</legend>
+                                <label th:each="score : ${#numbers.sequence(1, 5)}">
+                                    <input type="radio"
+                                           name="score"
+                                           th:value="${score}"
+                                           th:checked="${rating != null and rating.myScore != null and rating.myScore == score}"
+                                           required>
+                                    <span th:text="${score}">1</span>
+                                </label>
+                            </fieldset>
+                            <button class="btn" type="submit">Guardar valoración</button>
+                        </form>
+
+                        <form th:if="${rating != null and rating.myScore != null}"
+                              th:action="@{/event-info/{id}/rating/delete(id=${event.id})}"
+                              method="post"
+                              data-confirm="¿Eliminar tu valoración?">
+                            <button class="btn" type="submit">
+                                Eliminar mi valoración
+                            </button>
+                        </form>
+                    </section>
+                </div>
             <div th:if="${event == null}">
                 <p class="lead">Selecciona un evento para ver sus detalles.</p>
                 <ul>
@@ -73,5 +191,7 @@
             <p><a class="btn" th:href="@{/}">Volver al inicio</a></p>
         </div>
     </section>
+
+    <script th:src="@{/js/event-feedback.js}" defer></script>
 </body>
 </html>

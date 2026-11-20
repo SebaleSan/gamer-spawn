@@ -1,6 +1,8 @@
 package com.example.gamerspawn.client;
 
 import com.example.gamerspawn.model.EventView;
+import com.example.gamerspawn.model.CommentView;
+import com.example.gamerspawn.model.RatingView;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -92,5 +94,85 @@ public class BackendApiClient {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .retrieve()
                 .body(EventView.class);
+    }
+
+    public List<CommentView> getComments(Long eventId, String token) {
+        return restClient.get()
+                .uri("/api/private/events/{eventId}/comments", eventId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+    }
+
+    public CommentView createComment(
+            Long eventId,
+            String content,
+            String token) {
+        return restClient.post()
+                .uri("/api/private/events/{eventId}/comments", eventId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("content", content))
+                .retrieve()
+                .body(CommentView.class);
+    }
+
+    public CommentView updateComment(
+            Long eventId,
+            Long commentId,
+            String content,
+            String token) {
+        return restClient.put()
+                .uri("/api/private/events/{eventId}/comments/{commentId}",
+                        eventId,
+                        commentId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("content", content))
+                .retrieve()
+                .body(CommentView.class);
+    }
+
+    public void deleteComment(
+            Long eventId,
+            Long commentId,
+            String token) {
+        restClient.delete()
+                .uri("/api/private/events/{eventId}/comments/{commentId}",
+                        eventId,
+                        commentId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    public RatingView getRating(Long eventId, String token) {
+        return restClient.get()
+                .uri("/api/private/events/{eventId}/rating", eventId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .retrieve()
+                .body(RatingView.class);
+    }
+
+    public RatingView saveRating(
+            Long eventId,
+            Integer score,
+            String token) {
+        return restClient.put()
+                .uri("/api/private/events/{eventId}/rating", eventId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("score", score))
+                .retrieve()
+                .body(RatingView.class);
+    }
+
+    public RatingView deleteRating(Long eventId, String token) {
+        return restClient.delete()
+                .uri("/api/private/events/{eventId}/rating", eventId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .retrieve()
+                .body(RatingView.class);
     }
 }
