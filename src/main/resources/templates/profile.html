@@ -7,17 +7,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/fonts.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a class="logo" th:href="@{/}">Gamer<span>Spawn</span></a>
+            <nav>
+                <div>
+                    <a th:href="@{/}">Inicio</a>
+                    <a th:href="@{/event-info}">Eventos</a>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn" type="submit">Cerrar sesión</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+
     <section class="hero">
         <div class="container">
             <p class="eyebrow">Página privada</p>
             <h1>Mi perfil</h1>
             <p class="lead">Sesión iniciada como <strong sec:authentication="name">usuario</strong>.</p>
-            <p class="lead">Aquí podrás configurar tus juegos de interés, avatar, nombre de usuario y notificaciones. Se implementará más adelante.</p>
-            <p><a class="btn" th:href="@{/}">Volver al inicio</a></p>
         </div>
     </section>
+
+    <main class="container">
+        <div class="event-feedback-message"
+             th:if="${profileMessage}"
+             th:text="${profileMessage}"></div>
+        <div class="event-feedback-message error"
+             th:if="${profileError}"
+             th:text="${profileError}"></div>
+
+        <section>
+            <h2 class="section-title">Mis eventos</h2>
+            <div class="upcoming" th:if="${not #lists.isEmpty(myEvents)}">
+                <a class="event-card neon-1"
+                   th:each="event : ${myEvents}"
+                   th:style="${event.imageUrl != null ? 'background-image: url(' + event.imageUrl + ')' : ''}"
+                   th:href="@{/event-info/{id}(id=${event.id})}">
+                    <div class="event-card-body">
+                        <h3 th:text="${event.title}">Evento</h3>
+                        <p class="event-type" th:text="${event.eventDate + ' · ' + event.modality}">Fecha · Modalidad</p>
+                        <p class="event-place" th:text="${event.location}">Ubicación</p>
+                    </div>
+                </a>
+            </div>
+            <p class="empty-state" th:if="${#lists.isEmpty(myEvents)}">Aún no has publicado eventos.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">Publicar evento</h2>
+            <form class="event-create-form" th:action="@{/profile/events}" method="post">
+                <label>Título *
+                    <input name="title" maxlength="255" required th:value="${eventForm['title']}">
+                </label>
+                <label>Fecha *
+                    <input type="date" name="eventDate" required th:min="${today}" th:value="${eventForm['eventDate']}">
+                </label>
+                <label>Hora
+                    <input type="time" name="eventTime" th:value="${eventForm['eventTime']}">
+                </label>
+                <label>Modalidad *
+                    <select name="modality" required>
+                        <option value="PRESENCIAL" th:selected="${eventForm['modality'] == 'PRESENCIAL'}">Presencial</option>
+                        <option value="ONLINE" th:selected="${eventForm['modality'] == 'ONLINE'}">Online</option>
+                    </select>
+                </label>
+                <label>Ubicación *
+                    <input name="location" maxlength="255" required th:value="${eventForm['location']}">
+                </label>
+                <label>Tipo de evento *
+                    <input name="eventType" maxlength="255" required th:value="${eventForm['eventType']}">
+                </label>
+                <label>Videojuego *
+                    <input name="videoGame" maxlength="255" required th:value="${eventForm['videoGame']}">
+                </label>
+                <label>Categoría *
+                    <input name="category" maxlength="255" required th:value="${eventForm['category']}">
+                </label>
+                <label>País *
+                    <input name="country" maxlength="255" required th:value="${eventForm['country']}">
+                </label>
+                <label>Ciudad *
+                    <input name="city" maxlength="255" required th:value="${eventForm['city']}">
+                </label>
+                <label>Organizador
+                    <input name="organizer" maxlength="255" th:value="${eventForm['organizer']}">
+                </label>
+                <label>Enlace de acceso
+                    <input type="url" name="accessLink" maxlength="255" placeholder="https://..." th:value="${eventForm['accessLink']}">
+                </label>
+                <label>Imagen del banner
+                    <input type="url" name="imageUrl" maxlength="255" placeholder="https://..." th:value="${eventForm['imageUrl']}">
+                </label>
+                <label class="wide">Descripción *
+                    <textarea name="description" maxlength="255" required th:text="${eventForm['description']}"></textarea>
+                </label>
+                <label class="wide">Requisitos de participación
+                    <textarea name="participationRequirements" maxlength="255" th:text="${eventForm['participationRequirements']}"></textarea>
+                </label>
+                <label class="wide">Información de inscripción
+                    <textarea name="registrationInformation" maxlength="255" th:text="${eventForm['registrationInformation']}"></textarea>
+                </label>
+                <button class="btn" type="submit">Publicar evento</button>
+            </form>
+        </section>
+    </main>
 </body>
 </html>

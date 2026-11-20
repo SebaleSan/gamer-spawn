@@ -14,10 +14,13 @@
         <div class="container navbar-inner">
             <a class="logo" th:href="@{/}">Gamer<span>Spawn</span></a>
             <nav>
-                <a th:href="@{/}">Inicio</a>
-                <form th:action="@{/logout}" method="post">
-                    <button class="btn" type="submit">Cerrar sesión</button>
-                </form>
+                <div>
+                    <a th:href="@{/}">Inicio</a>
+                    <a th:href="@{/profile}">Mi perfil</a>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn" type="submit">Cerrar sesión</button>
+                    </form>
+                </div>
             </nav>
         </div>
     </header>
@@ -82,6 +85,18 @@
                        th:href="${event.accessLink}"
                        target="_blank"
                        rel="noopener">Acceder al evento</a>
+                    <div class="event-share">
+                        <span>Compartir</span>
+                        <a th:href="@{https://wa.me/(text=${event.title + ' ' + shareUrl})}"
+                           target="_blank"
+                           rel="noopener noreferrer">WhatsApp</a>
+                        <a th:href="@{https://www.facebook.com/sharer/sharer.php(u=${shareUrl})}"
+                           target="_blank"
+                           rel="noopener noreferrer">Facebook</a>
+                        <a th:href="@{https://x.com/intent/tweet(url=${shareUrl},text=${event.title})}"
+                           target="_blank"
+                           rel="noopener noreferrer">X</a>
+                    </div>
                     <div class="event-media" id="media">
                         <h2>Fotos y videos</h2>
 
@@ -199,12 +214,18 @@
             </section>
             <div th:if="${event == null}">
                 <p class="lead">Selecciona un evento para ver sus detalles.</p>
-                <ul>
-                    <li th:each="availableEvent : ${events}">
-                        <a th:href="@{/event-info/{id}(id=${availableEvent.id})}"
-                           th:text="${availableEvent.title}">Evento</a>
-                    </li>
-                </ul>
+                <div class="upcoming event-list">
+                    <a class="event-card neon-1"
+                       th:each="availableEvent : ${events}"
+                       th:style="${availableEvent.imageUrl != null ? 'background-image: url(' + availableEvent.imageUrl + ')' : ''}"
+                       th:href="@{/event-info/{id}(id=${availableEvent.id})}">
+                        <div class="event-card-body">
+                            <h3 th:text="${availableEvent.title}">Evento</h3>
+                            <p class="event-type" th:text="${availableEvent.eventDate + ' · ' + availableEvent.modality}">Fecha · Modalidad</p>
+                            <p class="event-place" th:text="${availableEvent.location}">Ubicación</p>
+                        </div>
+                    </a>
+                </div>
             </div>
             <p><a class="btn" th:href="@{/}">Volver al inicio</a></p>
         </div>
