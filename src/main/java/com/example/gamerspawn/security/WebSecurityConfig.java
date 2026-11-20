@@ -31,7 +31,8 @@ public class WebSecurityConfig {
                                 "script-src 'self'; " +
                                 "style-src 'self'; " +
                                 "style-src-attr 'unsafe-inline'; " +
-                                "img-src 'self' data:; " +
+                                "img-src 'self' data: https:; " +
+                                "frame-src https://www.youtube-nocookie.com; " +
                                 "font-src 'self'; " +
                                 "object-src 'none'; " +
                                 "base-uri 'self'; " +
