@@ -8,6 +8,7 @@ import com.example.gamerspawn.model.MediaView;
 import com.example.gamerspawn.model.RatingView;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
@@ -23,10 +24,15 @@ public class EventInfoController {
 
     private final BackendApiClient backendApiClient;
     private final TokenStore tokenStore;
+    private final String publicUrl;
 
-    public EventInfoController(BackendApiClient backendApiClient, TokenStore tokenStore) {
+    public EventInfoController(
+            BackendApiClient backendApiClient,
+            TokenStore tokenStore,
+            @Value("${app.public-url}") String publicUrl) {
         this.backendApiClient = backendApiClient;
         this.tokenStore = tokenStore;
+        this.publicUrl = publicUrl;
     }
 
     @GetMapping("/event-info")
@@ -82,6 +88,7 @@ public class EventInfoController {
         model.addAttribute("mediaItems", mediaItems);
         model.addAttribute("currentUsername", authentication.getName());
         model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("shareUrl", publicUrl + "/event-info/" + id);
         return "event-info";
     }
 }
