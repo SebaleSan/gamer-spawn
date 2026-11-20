@@ -92,8 +92,7 @@ public class EventInfoController {
                     "feedbackError",
                     "No se pudo publicar el comentario.");
         }
-        redirectAttributes.addAttribute("tab", "comments");
-        return "redirect:/event-info/{id}";
+        return "redirect:/event-info/{id}#comments";
     }
 
     @PostMapping("/event-info/{id}/comments/{commentId}/edit")
@@ -117,8 +116,7 @@ public class EventInfoController {
                     "feedbackError",
                     "No se pudo actualizar el comentario.");
         }
-        redirectAttributes.addAttribute("tab", "comments");
-        return "redirect:/event-info/{id}";
+        return "redirect:/event-info/{id}#comments";
     }
 
     @PostMapping("/event-info/{id}/comments/{commentId}/delete")
@@ -140,8 +138,7 @@ public class EventInfoController {
                     "feedbackError",
                     "No se pudo eliminar el comentario.");
         }
-        redirectAttributes.addAttribute("tab", "comments");
-        return "redirect:/event-info/{id}";
+        return "redirect:/event-info/{id}#comments";
     }
 
     @PostMapping("/event-info/{id}/rating")
@@ -155,15 +152,11 @@ public class EventInfoController {
                     id,
                     score,
                     tokenStore.requireToken(session));
-            redirectAttributes.addFlashAttribute(
-                    "feedbackMessage",
-                    "Valoración guardada.");
         } catch (RuntimeException exception) {
             redirectAttributes.addFlashAttribute(
-                    "feedbackError",
+                    "ratingError",
                     "No se pudo guardar la valoración.");
         }
-        redirectAttributes.addAttribute("tab", "rating");
         return "redirect:/event-info/{id}";
     }
 
@@ -176,15 +169,11 @@ public class EventInfoController {
             backendApiClient.deleteRating(
                     id,
                     tokenStore.requireToken(session));
-            redirectAttributes.addFlashAttribute(
-                    "feedbackMessage",
-                    "Valoración eliminada.");
         } catch (RuntimeException exception) {
             redirectAttributes.addFlashAttribute(
-                    "feedbackError",
+                    "ratingError",
                     "No se pudo eliminar la valoración.");
         }
-        redirectAttributes.addAttribute("tab", "rating");
         return "redirect:/event-info/{id}";
     }
 }

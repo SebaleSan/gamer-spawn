@@ -1,34 +1,3 @@
-const feedbackTabButtons =
-    document.querySelectorAll('.event-feedback-tab');
-const feedbackPanels =
-    document.querySelectorAll('.event-feedback-panel');
-const requestedFeedbackTab =
-    new URLSearchParams(window.location.search).get('tab');
-
-function openFeedbackTab(tabName) {
-    feedbackTabButtons.forEach(button => {
-        button.classList.toggle(
-            'active',
-            button.dataset.tab === tabName);
-    });
-    feedbackPanels.forEach(panel => {
-        panel.classList.toggle(
-            'active',
-            panel.id === 'feedback-' + tabName);
-    });
-}
-
-feedbackTabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        openFeedbackTab(button.dataset.tab);
-    });
-});
-
-if (requestedFeedbackTab === 'rating'
-        || requestedFeedbackTab === 'comments') {
-    openFeedbackTab(requestedFeedbackTab);
-}
-
 document.querySelectorAll(
     '.comment-menu-options form[action*="/edit"]'
 ).forEach(form => {
