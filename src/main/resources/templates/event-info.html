@@ -82,10 +82,56 @@
                        th:href="${event.accessLink}"
                        target="_blank"
                        rel="noopener">Acceder al evento</a>
-                    <div class="event-gallery" th:if="${event.photoUrls != null}">
-                        <img th:each="photoUrl : ${event.photoUrls}"
-                             th:src="${photoUrl}"
-                             th:alt="${event.title}">
+                    <div class="event-media" id="media">
+                        <h2>Fotos y videos</h2>
+
+                        <div class="event-feedback-message"
+                             th:if="${mediaMessage}"
+                             th:text="${mediaMessage}"></div>
+                        <div class="event-feedback-message error"
+                             th:if="${mediaError}"
+                             th:text="${mediaError}"></div>
+
+                        <div class="event-gallery" th:if="${not #lists.isEmpty(mediaItems)}">
+                            <figure class="event-media-item" th:each="media : ${mediaItems}">
+                                <img th:if="${media.type == 'PHOTO'}"
+                                     th:src="${media.url}"
+                                     th:alt="'Foto de ' + ${event.title}"
+                                     loading="lazy">
+                                <iframe th:if="${media.type == 'VIDEO'}"
+                                        th:src="${media.url}"
+                                        th:title="'Video de ' + ${event.title}"
+                                        loading="lazy"
+                                        referrerpolicy="strict-origin-when-cross-origin"
+                                        allow="encrypted-media; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                <form th:if="${isAdmin or media.username == currentUsername}"
+                                      th:action="@{/event-info/{id}/media/{mediaId}/delete(id=${event.id},mediaId=${media.id})}"
+                                      method="post"
+                                      data-confirm="¿Eliminar este contenido?">
+                                    <button class="event-media-delete" type="submit">Eliminar</button>
+                                </form>
+                            </figure>
+                        </div>
+                        <p th:if="${#lists.isEmpty(mediaItems)}">Aún no hay fotos ni videos para este evento.</p>
+
+                        <form class="event-media-form"
+                              th:action="@{/event-info/{id}/media(id=${event.id})}"
+                              method="post">
+                            <label for="media-type">Tipo</label>
+                            <select id="media-type" name="type" required>
+                                <option value="PHOTO">Foto</option>
+                                <option value="VIDEO">Video de YouTube</option>
+                            </select>
+                            <label for="media-url">URL</label>
+                            <input id="media-url"
+                                   type="url"
+                                   name="url"
+                                   maxlength="500"
+                                   required
+                                   placeholder="https://...">
+                            <button class="btn" type="submit">Agregar</button>
+                        </form>
                     </div>
                 </div>
             </div>
