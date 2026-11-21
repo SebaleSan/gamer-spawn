@@ -19,7 +19,6 @@ public class EventView {
     private String participationRequirements;
     private String registrationInformation;
     private String imageUrl;
-    private java.util.List<String> photoUrls;
 
     public Long getId() {
         return id;
@@ -155,13 +154,5 @@ public class EventView {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public java.util.List<String> getPhotoUrls() {
-        return photoUrls;
-    }
-
-    public void setPhotoUrls(java.util.List<String> photoUrls) {
-        this.photoUrls = photoUrls;
     }
 }

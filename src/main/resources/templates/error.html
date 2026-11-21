@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GamerSpawn - Error</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/fonts.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a class="logo" th:href="@{/}">Gamer<span>Spawn</span></a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <p class="eyebrow" th:text="${status != null ? 'Error ' + status : 'Error'}">Error</p>
+            <h1 th:text="${status == 404 ? 'Página no encontrada' : 'Algo salió mal'}">Algo salió mal</h1>
+            <p class="lead" th:text="${status == 404 ? 'La página que buscas no existe.' : 'No pudimos procesar tu solicitud. Intenta nuevamente más tarde.'}">
+                No pudimos procesar tu solicitud.
+            </p>
+            <p><a class="btn" th:href="@{/}">Volver al inicio</a></p>
+        </div>
+    </section>
+</body>
+</html>

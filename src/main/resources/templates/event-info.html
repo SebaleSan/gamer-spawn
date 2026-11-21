@@ -14,10 +14,13 @@
         <div class="container navbar-inner">
             <a class="logo" th:href="@{/}">Gamer<span>Spawn</span></a>
             <nav>
-                <a th:href="@{/}">Inicio</a>
-                <form th:action="@{/logout}" method="post">
-                    <button class="btn" type="submit">Cerrar sesión</button>
-                </form>
+                <div>
+                    <a th:href="@{/}">Inicio</a>
+                    <a th:href="@{/profile}">Mi perfil</a>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn" type="submit">Cerrar sesión</button>
+                    </form>
+                </div>
             </nav>
         </div>
     </header>
@@ -32,6 +35,34 @@
                 <div class="event-detail-image"
                      th:style="${event.imageUrl != null ? 'background-image: url(' + event.imageUrl + ')' : ''}">
                     <span class="event-badge" th:text="${event.modality}">MODALIDAD</span>
+                    <div class="event-rating">
+                        <p class="event-rating-summary">
+                            <strong th:text="${rating != null and rating.averageScore != null ? #numbers.formatDecimal(rating.averageScore, 1, 1) : '-'}">0.0</strong>
+                            <span class="event-rating-star">★</span>
+                            <span th:text="${rating != null ? rating.totalRatings : 0} + ' valoraciones'">0 valoraciones</span>
+                        </p>
+                        <form class="event-rating-stars"
+                              th:action="@{/event-info/{id}/rating(id=${event.id})}"
+                              method="post"
+                              aria-label="Calificar evento">
+                            <button th:each="score : ${#numbers.sequence(1, 5)}"
+                                    type="submit"
+                                    name="score"
+                                    th:value="${score}"
+                                    th:classappend="${rating != null and rating.myScore != null and score <= rating.myScore} ? 'selected'"
+                                    th:title="'Calificar con ' + ${score} + ' de 5'"
+                                    th:aria-label="'Calificar con ' + ${score} + ' de 5'">★</button>
+                        </form>
+                        <form th:if="${rating != null and rating.myScore != null}"
+                              th:action="@{/event-info/{id}/rating/delete(id=${event.id})}"
+                              method="post"
+                              data-confirm="¿Eliminar tu valoración?">
+                            <button class="event-rating-remove" type="submit">Quitar mi valoración</button>
+                        </form>
+                        <p class="event-rating-error"
+                           th:if="${ratingError}"
+                           th:text="${ratingError}"></p>
+                    </div>
                 </div>
                 <div class="event-detail-content">
                     <p class="event-detail-description" th:text="${event.description}">Descripción del evento</p>
@@ -54,24 +85,152 @@
                        th:href="${event.accessLink}"
                        target="_blank"
                        rel="noopener">Acceder al evento</a>
-                    <div class="event-gallery" th:if="${event.photoUrls != null}">
-                        <img th:each="photoUrl : ${event.photoUrls}"
-                             th:src="${photoUrl}"
-                             th:alt="${event.title}">
+                    <div class="event-share">
+                        <span>Compartir</span>
+                        <a th:href="@{https://wa.me/(text=${event.title + ' ' + shareUrl})}"
+                           target="_blank"
+                           rel="noopener noreferrer">WhatsApp</a>
+                        <a th:href="@{https://www.facebook.com/sharer/sharer.php(u=${shareUrl})}"
+                           target="_blank"
+                           rel="noopener noreferrer">Facebook</a>
+                        <a th:href="@{https://x.com/intent/tweet(url=${shareUrl},text=${event.title})}"
+                           target="_blank"
+                           rel="noopener noreferrer">X</a>
+                    </div>
+                    <div class="event-media" id="media">
+                        <h2>Fotos y videos</h2>
+
+                        <div class="event-feedback-message"
+                             th:if="${mediaMessage}"
+                             th:text="${mediaMessage}"></div>
+                        <div class="event-feedback-message error"
+                             th:if="${mediaError}"
+                             th:text="${mediaError}"></div>
+
+                        <div class="event-gallery" th:if="${not #lists.isEmpty(mediaItems)}">
+                            <figure class="event-media-item" th:each="media : ${mediaItems}">
+                                <img th:if="${media.type == 'PHOTO'}"
+                                     th:src="${media.url}"
+                                     th:alt="'Foto de ' + ${event.title}"
+                                     loading="lazy">
+                                <iframe th:if="${media.type == 'VIDEO'}"
+                                        th:src="${media.url}"
+                                        th:title="'Video de ' + ${event.title}"
+                                        loading="lazy"
+                                        referrerpolicy="strict-origin-when-cross-origin"
+                                        allow="encrypted-media; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                <form th:if="${isAdmin or media.username == currentUsername}"
+                                      th:action="@{/event-info/{id}/media/{mediaId}/delete(id=${event.id},mediaId=${media.id})}"
+                                      method="post"
+                                      data-confirm="¿Eliminar este contenido?">
+                                    <button class="event-media-delete" type="submit">Eliminar</button>
+                                </form>
+                            </figure>
+                        </div>
+                        <p th:if="${#lists.isEmpty(mediaItems)}">Aún no hay fotos ni videos para este evento.</p>
+
+                        <form class="event-media-form"
+                              th:action="@{/event-info/{id}/media(id=${event.id})}"
+                              method="post">
+                            <label for="media-type">Tipo</label>
+                            <select id="media-type" name="type" required>
+                                <option value="PHOTO">Foto</option>
+                                <option value="VIDEO">Video de YouTube</option>
+                            </select>
+                            <label for="media-url">URL</label>
+                            <input id="media-url"
+                                   type="url"
+                                   name="url"
+                                   maxlength="500"
+                                   required
+                                   placeholder="https://...">
+                            <button class="btn" type="submit">Agregar</button>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <section class="event-comments" id="comments" th:if="${event != null}">
+                <h2>Comentarios</h2>
+
+                <div class="event-feedback-message"
+                     th:if="${feedbackMessage}"
+                     th:text="${feedbackMessage}"></div>
+                <div class="event-feedback-message error"
+                     th:if="${feedbackError}"
+                     th:text="${feedbackError}"></div>
+
+                <form th:action="@{/event-info/{id}/comments(id=${event.id})}"
+                      method="post">
+                    <label for="comment-content">Agregar comentario</label>
+                    <textarea id="comment-content"
+                              name="content"
+                              maxlength="1000"
+                              required
+                              placeholder="Escribe tu comentario"></textarea>
+                    <button class="btn" type="submit">Publicar</button>
+                </form>
+
+                <div th:if="${comments == null or #lists.isEmpty(comments)}">
+                    Aún no hay comentarios para este evento.
+                </div>
+
+                <article th:each="comment : ${comments}">
+                    <strong th:text="${comment.username}">Usuario</strong>
+                    <p th:text="${comment.content}">Comentario</p>
+
+                    <div class="comment-menu" th:if="${comment.username == currentUsername}">
+                        <details>
+                            <summary aria-label="Opciones del comentario">⋮</summary>
+                            <div class="comment-menu-options">
+                                <form th:action="@{/event-info/{id}/comments/{commentId}/edit(id=${event.id},commentId=${comment.id})}"
+                                      method="post">
+                                    <label th:for="'edit-comment-' + ${comment.id}">Editar comentario</label>
+                                    <textarea th:id="'edit-comment-' + ${comment.id}"
+                                              name="content"
+                                              maxlength="1000"
+                                              required
+                                              th:text="${comment.content}"></textarea>
+                                    <button class="btn" type="submit">Guardar</button>
+                                    <button class="comment-cancel-button"
+                                            type="button"
+                                            th:data-comment-menu-id="'edit-comment-' + ${comment.id}">
+                                        Cancelar
+                                    </button>
+                                </form>
+
+                                <form th:action="@{/event-info/{id}/comments/{commentId}/delete(id=${event.id},commentId=${comment.id})}"
+                                      method="post"
+                                      data-confirm="¿Eliminar este comentario?">
+                                    <button class="comment-delete-button" type="submit">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        </details>
+                    </div>
+                </article>
+            </section>
             <div th:if="${event == null}">
                 <p class="lead">Selecciona un evento para ver sus detalles.</p>
-                <ul>
-                    <li th:each="availableEvent : ${events}">
-                        <a th:href="@{/event-info/{id}(id=${availableEvent.id})}"
-                           th:text="${availableEvent.title}">Evento</a>
-                    </li>
-                </ul>
+                <div class="upcoming event-list">
+                    <a class="event-card neon-1"
+                       th:each="availableEvent : ${events}"
+                       th:style="${availableEvent.imageUrl != null ? 'background-image: url(' + availableEvent.imageUrl + ')' : ''}"
+                       th:href="@{/event-info/{id}(id=${availableEvent.id})}">
+                        <div class="event-card-body">
+                            <h3 th:text="${availableEvent.title}">Evento</h3>
+                            <p class="event-type" th:text="${availableEvent.eventDate + ' · ' + availableEvent.modality}">Fecha · Modalidad</p>
+                            <p class="event-place" th:text="${availableEvent.location}">Ubicación</p>
+                        </div>
+                    </a>
+                </div>
             </div>
             <p><a class="btn" th:href="@{/}">Volver al inicio</a></p>
         </div>
     </section>
+
+    <script th:src="@{/js/event-feedback.js}" defer></script>
 </body>
 </html>
