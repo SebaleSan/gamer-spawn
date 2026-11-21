@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>GamerSpawn - Buscar eventos</title>
@@ -31,18 +31,26 @@
 
     <main class="container">
         <form class="event-search-form" th:action="@{/events}" method="get">
-            <input name="title" placeholder="Nombre del evento" th:value="${filters.title}">
-            <input name="videoGame" placeholder="Videojuego" th:value="${filters.videoGame}">
-            <input name="eventType" placeholder="Tipo" th:value="${filters.eventType}">
-            <input name="category" placeholder="Categoría" th:value="${filters.category}">
-            <input name="country" placeholder="País" th:value="${filters.country}">
-            <input name="city" placeholder="Ciudad" th:value="${filters.city}">
-            <select name="modality">
+            <label class="visually-hidden" for="filter-title">Nombre del evento</label>
+            <input id="filter-title" name="title" placeholder="Nombre del evento" th:value="${filters.title}">
+            <label class="visually-hidden" for="filter-video-game">Videojuego</label>
+            <input id="filter-video-game" name="videoGame" placeholder="Videojuego" th:value="${filters.videoGame}">
+            <label class="visually-hidden" for="filter-event-type">Tipo</label>
+            <input id="filter-event-type" name="eventType" placeholder="Tipo" th:value="${filters.eventType}">
+            <label class="visually-hidden" for="filter-category">Categoría</label>
+            <input id="filter-category" name="category" placeholder="Categoría" th:value="${filters.category}">
+            <label class="visually-hidden" for="filter-country">País</label>
+            <input id="filter-country" name="country" placeholder="País" th:value="${filters.country}">
+            <label class="visually-hidden" for="filter-city">Ciudad</label>
+            <input id="filter-city" name="city" placeholder="Ciudad" th:value="${filters.city}">
+            <label class="visually-hidden" for="filter-modality">Modalidad</label>
+            <select id="filter-modality" name="modality">
                 <option value="">Todas las modalidades</option>
                 <option value="PRESENCIAL" th:selected="${filters.modality == 'PRESENCIAL'}">Presencial</option>
                 <option value="ONLINE" th:selected="${filters.modality == 'ONLINE'}">Online</option>
             </select>
-            <input type="date" name="eventDate" th:value="${filters.eventDate}">
+            <label class="visually-hidden" for="filter-event-date">Fecha desde</label>
+            <input id="filter-event-date" type="date" name="eventDate" th:value="${filters.eventDate}">
             <button class="btn" type="submit">Buscar</button>
         </form>
         <p class="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}"></p>
