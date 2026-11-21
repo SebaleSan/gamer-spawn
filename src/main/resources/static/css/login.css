@@ -58,6 +58,16 @@ input[type="submit"]:hover {
     color: #000;
 }
 
+form p {
+    margin: 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+form a {
+    color: #8df2f3;
+}
+
 body > div {
     margin-bottom: 16px;
     padding: 10px 16px;

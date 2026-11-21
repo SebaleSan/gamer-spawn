@@ -2,17 +2,41 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>GamerSpawn Registro</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
     </head>
     <body>
-        <div th:if="${param.error}">
-            No se pudo completar el registro.
-        </div>
+        <div th:if="${errorMessage}" th:text="${errorMessage}"></div>
         <form th:action="@{/sign-up}" method="post">
-            <div><label> Nombre : <input type="text" name="name" required/> </label></div>
-            <div><label> Correo : <input type="email" name="email" required/> </label></div>
-            <div><label> Password: <input type="password" name="password" required/> </label></div>
+            <div><label> Usuario :
+                <input type="text"
+                       name="username"
+                       minlength="3"
+                       maxlength="30"
+                       pattern="[A-Za-z0-9_.\-]{3,30}"
+                       autocomplete="username"
+                       required
+                       th:value="${username}"/>
+            </label></div>
+            <div><label> Correo :
+                <input type="email"
+                       name="email"
+                       maxlength="254"
+                       autocomplete="email"
+                       required
+                       th:value="${email}"/>
+            </label></div>
+            <div><label> Password:
+                <input type="password"
+                       name="password"
+                       minlength="8"
+                       maxlength="72"
+                       autocomplete="new-password"
+                       required/>
+            </label></div>
             <div><input type="submit" value="Registrarse"/></div>
+            <p>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a></p>
         </form>
     </body>
 </html>

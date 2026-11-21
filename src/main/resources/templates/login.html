@@ -11,10 +11,14 @@
         <div th:if="${param.logout}">
             Has cerrado sesion.
         </div>
+        <div th:if="${param.registered}">
+            Cuenta creada. Inicia sesión con tu usuario y contraseña.
+        </div>
         <form th:action="@{/login}" method="post">
             <div><label> Usuario : <input type="text" name="username"/> </label></div>
             <div><label> Password: <input type="password" name="password"/> </label></div>
             <div><input type="submit" value="Sign In"/></div>
+            <p>¿No tienes cuenta? <a th:href="@{/sign-up}">Regístrate</a></p>
         </form>
     </body>
 </html>

@@ -54,6 +54,18 @@ public class BackendApiClient {
         }
     }
 
+    public void register(String username, String email, String password) {
+        restClient.post()
+                .uri("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of(
+                        "username", username,
+                        "email", email,
+                        "password", password))
+                .retrieve()
+                .toBodilessEntity();
+    }
+
     public List<EventView> getEvents() {
         return restClient.get()
                 .uri("/api/events")
