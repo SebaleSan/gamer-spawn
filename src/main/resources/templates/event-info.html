@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>GamerSpawn - Eventos</title>
@@ -186,8 +186,9 @@
                             <div class="comment-menu-options">
                                 <form th:action="@{/event-info/{id}/comments/{commentId}/edit(id=${event.id},commentId=${comment.id})}"
                                       method="post">
-                                    <label th:for="'edit-comment-' + ${comment.id}">Editar comentario</label>
-                                    <textarea th:id="'edit-comment-' + ${comment.id}"
+                                    <label for="edit-comment" th:for="'edit-comment-' + ${comment.id}">Editar comentario</label>
+                                    <textarea id="edit-comment"
+                                              th:id="'edit-comment-' + ${comment.id}"
                                               name="content"
                                               maxlength="1000"
                                               required
